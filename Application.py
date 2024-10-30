@@ -4,6 +4,7 @@ from flask_cors import CORS
 from langchain import hub
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain_openai import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
 from Tools import Toolkit
 import os
 
@@ -18,13 +19,11 @@ def answer(query: str):
                      temperature=0,
                      max_tokens=None
                      )
-    prompt = hub.pull("hwchase17/react")
-    agent = create_react_agent(llm, Toolkit, prompt)
-    agent_executor = AgentExecutor(agent=agent, tools=Toolkit, verbose=True)
+    react_prompt = hub.pull("hwchase17/react")
+    agent = create_react_agent(llm, Toolkit, react_prompt)
+    agent_executor = AgentExecutor(agent=agent, tools=Toolkit, verbose=True, handle_parsing_errors=True)
     response = agent_executor.invoke({"input": query})
     return response
-
-
 @Application.route("/")
 def hello_page():
     return "Home Route"

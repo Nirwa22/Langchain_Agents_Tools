@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
 from langchain.prompts import ChatPromptTemplate
-from langchain.tools import tool
+from langchain.tools import Tool
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -22,17 +22,21 @@ llm = ChatOpenAI(model_name="gpt-4o-mini",
                  )
 
 
-@tool
 def age(a: int):
-    """Substract a from 2024."""
+    """Minus a from 2024 """
     return int(2024) - int(a)
 
 
-@tool
-def output_response(query):
-    """Use the retrieval chain to answer the query"""
+def reply(query):
+    """Reply for social and general queries"""
     template_sample = """
-    Answer the following based on the following:
+    """
+    return "Do you have any further queries"
+
+def output_response(query):
+    template_sample = """
+    You are an AI assistant who is polite. For general queries reply from your own knowledge base in a slightly 
+    formal manner. Answer the following based on the following:
     {context}
     Question:{input}
     """
@@ -43,4 +47,16 @@ def output_response(query):
     response = retrieval_chain.invoke({"input": query})
     return response["answer"]
 
-Toolkit = [age, output_response]
+
+Toolkit = [Tool(
+                name="Age_Calculator",
+                func=age,
+                description="""Only useful when user asks for their age otherwise if 
+                the user just provides their birth year or birth date or birth
+                month without asking their age then do not reply with their age."""
+                ), Tool(
+                        name="QA",
+                        func=output_response,
+                        description="""Useful for answering user's query regarding the vector
+                        database and general queries."""
+                        )]
