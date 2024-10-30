@@ -27,12 +27,6 @@ def age(a: int):
     return int(2024) - int(a)
 
 
-def reply(query):
-    """Reply for social and general queries"""
-    template_sample = """
-    """
-    return "Do you have any further queries"
-
 def output_response(query):
     template_sample = """
     You are an AI assistant who is polite. For general queries reply from your own knowledge base in a slightly 
