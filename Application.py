@@ -4,7 +4,6 @@ from flask_cors import CORS
 from langchain import hub
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain_openai import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
 from Tools import Toolkit
 import os
 
